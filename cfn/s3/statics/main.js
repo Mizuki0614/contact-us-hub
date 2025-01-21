@@ -1,6 +1,7 @@
 const emailEl = document.getElementById('email');
 const lastNameEl = document.getElementById('lastName');
 const firstNameEl = document.getElementById('firstName');
+const inquiryContentEl = document.getElementById('inquiryContent'); // 新しい入力フィールド
 const submitEl = document.getElementById('submit');
 const resultEl = document.getElementById('result');
 const responseEl = document.getElementById('response');
@@ -34,6 +35,7 @@ submitEl.addEventListener('click', () => {
       email: emailEl.value,
       lastName: lastNameEl.value,
       firstName: firstNameEl.value,
+      inquiry_content: inquiryContentEl.value, // 問い合わせ内容を追加
     }),
   }).then(response => response.text())
     .then(displaySuccessMessage)
