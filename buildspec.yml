@@ -28,3 +28,5 @@ phases:
 artifacts:
   files:
     - artifacts/templates/**
+
+# 以下は省略
