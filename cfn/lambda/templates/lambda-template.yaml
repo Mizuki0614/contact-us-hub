@@ -1,17 +1,17 @@
-  AWSTemplateFormatVersion: "2010-09-09"
-  Resources:
-    ContactPostHandlerLambda:
-      Type: AWS::Lambda::Function
-      Properties:
-        FunctionName: ContactPostHandler
-        Handler: contact_handler.lambda_handler
-        Runtime: python3.13
-        Code:
-          S3Bucket: test-src-bucket-525045725925
-          S3Key: lambda/contact_handler.zip
-        Role: arn:aws:iam::525045725925:role/lambda-role-01
-        MemorySize: 128
-        Timeout: 30
-        Environment:
-          Variables:
-            DYNAMODB_TABLE: ContactInquiries
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  ContactPostHandlerLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: ContactPostHandler
+      Handler: contact_handler.lambda_handler
+      Runtime: python3.13
+      Code:
+        S3Bucket: test-src-bucket-525045725925
+        S3Key: lambda/contact_handler.zip
+      Role: arn:aws:iam::525045725925:role/lambda-role-01
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: contact-inquiries
