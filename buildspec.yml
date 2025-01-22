@@ -25,5 +25,3 @@ phases:
 artifacts:
   files:
     - artifacts/templates/**
-
-# test
