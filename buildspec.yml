@@ -5,9 +5,6 @@ phases:
       python: 3.13
   build:
     commands:
-      # 環境変数を設定（プロジェクト設定で管理可能なら省略可）
-      - export STATICS_BUCKET_NAME=test-statics-bucket-525045725925
-      - export SRC_BUCKET_NAME=test-src-bucket-525045725925
 
       # 1. 静的ファイルをS3にアップロード
       - echo "Uploading static files to $STATICS_BUCKET_NAME"
@@ -28,3 +25,5 @@ phases:
 artifacts:
   files:
     - artifacts/templates/**
+
+# test
