@@ -1,0 +1,22 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.13
+  build:
+    commands:
+      # 1. 静的ファイルをアーティファクト用ディレクトリにコピー
+      - mkdir -p artifacts/statics
+      - cp -r cfn/s3/statics/* artifacts/statics/
+
+      # 2. CloudFormationテンプレートをアーティファクト用ディレクトリにコピー
+      - mkdir -p artifacts/templates
+      - cp -r cfn/*/templates/* artifacts/templates/
+
+      # 3. LambdaコードをZIP化してS3にアップロード
+      - mkdir -p artifacts/lambda
+      - zip -j artifacts/lambda/contact_handler.zip cfn/lambda/src/*
+
+artifacts:
+  files:
+    - artifacts/**/*
