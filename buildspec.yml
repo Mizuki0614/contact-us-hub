@@ -5,20 +5,26 @@ phases:
       python: 3.13
   build:
     commands:
-      # 1. 静的ファイルをアーティファクト用ディレクトリにコピー
-      - mkdir -p artifacts/statics
-      - cp -r cfn/s3/statics/* artifacts/statics/
+      # 環境変数を設定（プロジェクト設定で管理可能なら省略可）
+      - export STATICS_BUCKET_NAME=test-statics-bucket-525045725925
+      - export SRC_BUCKET_NAME=test-src-bucket-525045725925
+
+      # 1. 静的ファイルをS3にアップロード
+      - echo "Uploading static files to $STATICS_BUCKET_NAME"
+      - aws s3 cp cfn/s3/statics/ s3://$STATICS_BUCKET_NAME/ --recursive
 
       # 2. CloudFormationテンプレートをアーティファクト用ディレクトリにコピー
+      - echo "Copying CloudFormation templates to artifacts/templates"
       - mkdir -p artifacts/templates
       - cp -r cfn/*/templates/* artifacts/templates/
 
       # 3. LambdaコードをZIP化してS3にアップロード
+      - echo "Packaging Lambda code"
       - mkdir -p artifacts/lambda
       - zip -j artifacts/lambda/contact_handler.zip cfn/lambda/src/*
+      - echo "Uploading Lambda code to $SRC_BUCKET_NAME"
+      - aws s3 cp artifacts/lambda/contact_handler.zip s3://$SRC_BUCKET_NAME/lambda/contact_handler.zip
 
 artifacts:
   files:
-    - artifacts/**/*
-    
-    # test
+    - artifacts/templates/**
