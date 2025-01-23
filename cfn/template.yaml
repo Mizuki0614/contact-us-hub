@@ -38,7 +38,7 @@ Resources:
     Properties:
       ApiId: !Ref ContactHttpApi
       IntegrationType: AWS_PROXY
-      IntegrationUri: !GetAtt ContactPostHandlerLambda.Arn
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ContactPostHandlerLambda.Arn}/invocations
       PayloadFormatVersion: "2.0"
 
   # HTTP API Route (/contact)
@@ -65,12 +65,12 @@ Resources:
       ApiId: !Ref ContactHttpApi
       StageName: prod
       DeploymentId: !Ref ContactHttpApiDeployment
-    DefaultRouteSettings:
-      DetailedMetricsEnabled: true
-    AccessLogSettings:
-      DestinationArn: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/api-gateway/ContactHttpApi/prod
-      Format: '{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","caller":"$context.identity.caller","user":"$context.identity.user","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}'
-
+      RouteSettings:
+        - RouteKey: "POST /contact"
+          DetailedMetricsEnabled: true
+      AccessLogSettings:
+        DestinationArn: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/api-gateway/ContactHttpApi/prod
+        Format: '{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","caller":"$context.identity.caller","user":"$context.identity.user","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}'
 
   # LambdaのAPI Gateway呼び出し権限
   ContactHttpApiLambdaPermission:
