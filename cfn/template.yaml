@@ -67,6 +67,3 @@ Resources:
       StageName: "$default"
       DeploymentId: !Ref ContactHttpApiDeployment
       AutoDeploy: true
-      AccessLogSettings:
-        DestinationArn: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/api-gateway/ContactHttpApi/prod
-        Format: '{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","caller":"$context.identity.caller","user":"$context.identity.user","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}'
