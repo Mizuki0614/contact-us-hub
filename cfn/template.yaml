@@ -55,7 +55,7 @@ Resources:
     DependsOn:
       - ContactHttpApiRoute
       - ContactHttpApiIntegration
-    Properties:
+  Properties:
       ApiId: !Ref ContactHttpApi
 
   # HTTP API Stage (prod)
@@ -66,17 +66,8 @@ Resources:
       StageName: prod
       DeploymentId: !Ref ContactHttpApiDeployment
       RouteSettings:
-        "/contact":
+        "POST /contact":
           DetailedMetricsEnabled: true
       AccessLogSettings:
         DestinationArn: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/api-gateway/ContactHttpApi/prod
         Format: '{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","caller":"$context.identity.caller","user":"$context.identity.user","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}'
-
-  # LambdaのAPI Gateway呼び出し権限
-  ContactHttpApiLambdaPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !GetAtt ContactPostHandlerLambda.Arn
-      Action: lambda:InvokeFunction
-      Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ContactHttpApi.ApiId}/*/POST/contact
