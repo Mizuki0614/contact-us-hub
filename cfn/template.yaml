@@ -56,8 +56,8 @@ Resources:
     DependsOn:
       - ContactHttpApiRoute
       - ContactHttpApiIntegration
-  Properties:
-      ApiId: !Ref ContactHttpApi
+    Properties:
+        ApiId: !Ref ContactHttpApi
 
   # HTTP API Stage (prod)
   ContactHttpApiStage:
