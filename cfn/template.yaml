@@ -38,7 +38,7 @@ Resources:
     Properties:
       ApiId: !Ref ContactHttpApi
       IntegrationType: AWS_PROXY
-      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ContactPostHandlerLambda.Arn}/invocations
+      IntegrationUri: !GetAtt ContactPostHandlerLambda.Arn
       PayloadFormatVersion: "2.0"
 
   # HTTP API Route (/contact)
@@ -46,7 +46,8 @@ Resources:
     Type: AWS::ApiGatewayV2::Route
     Properties:
       ApiId: !Ref ContactHttpApi
-      RouteKey: "POST /contact"
+      RouteKey: POST /contact
+      AuthorizationType: NONE
       Target: !Sub integrations/${ContactHttpApiIntegration}
 
   # HTTP API Deployment
@@ -63,11 +64,9 @@ Resources:
     Type: AWS::ApiGatewayV2::Stage
     Properties:
       ApiId: !Ref ContactHttpApi
-      StageName: prod
+      StageName: "$default"
       DeploymentId: !Ref ContactHttpApiDeployment
-      RouteSettings:
-        "POST /contact":
-          DetailedMetricsEnabled: true
+      AutoDeploy: true
       AccessLogSettings:
         DestinationArn: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/api-gateway/ContactHttpApi/prod
         Format: '{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","caller":"$context.identity.caller","user":"$context.identity.user","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}'
