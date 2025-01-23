@@ -66,7 +66,7 @@ Resources:
       StageName: prod
       DeploymentId: !Ref ContactHttpApiDeployment
       RouteSettings:
-        - RouteKey: "POST /contact"
+        "/contact":
           DetailedMetricsEnabled: true
       AccessLogSettings:
         DestinationArn: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/api-gateway/ContactHttpApi/prod
