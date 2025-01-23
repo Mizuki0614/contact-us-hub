@@ -55,6 +55,14 @@ Resources:
       ApiId: !Ref ContactHttpApi
       StageName: prod
 
+  # HTTP API Stage (prod)
+  ContactHttpApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref ContactHttpApi
+      StageName: prod
+      DeploymentId: !Ref ContactHttpApiDeployment
+
   # LambdaのAPI Gateway呼び出し権限
   ContactHttpApiLambdaPermission:
     Type: AWS::Lambda::Permission
