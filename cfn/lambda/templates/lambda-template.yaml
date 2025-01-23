@@ -1,3 +1,4 @@
+# Lambda関数テンプレート - ContactPostHandler
 AWSTemplateFormatVersion: "2010-09-09"
 Resources:
   ContactPostHandlerLambda:
@@ -22,3 +23,9 @@ Resources:
           Value: true
         - Key: project
           Value: exam-00704
+
+  # Lambdaバージョンリソース
+  ContactPostHandlerLambdaVersion:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref ContactPostHandlerLambda
