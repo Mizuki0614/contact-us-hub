@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime
 from zoneinfo import ZoneInfo  # Python 3.9以降で利用可能
 from botocore.exceptions import ClientError
+import logging
 
 # DynamoDBクライアント
 dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-1')
@@ -16,7 +17,13 @@ TABLE_NAME = os.environ['DYNAMODB_TABLE']
 # SES送信元（固定）
 SES_SOURCE_EMAIL = "no-reply@00704.engineed-exam.com"
 
+# ログの設定
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 def lambda_handler(event, context):
+    
+    logger.info("Received event: " + json.dumps(event))
     try:
         # リクエストボディを取得
         body = json.loads(event['body'])
