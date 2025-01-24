@@ -28,6 +28,9 @@ Resources:
     Properties:
       Name: ContactHttpApi
       ProtocolType: HTTP
+      Tags:
+        aws-exam-resource: true
+        project: exam-00704
 
   # Lambdaインテグレーション
   ContactHttpApiIntegration:
