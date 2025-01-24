@@ -28,11 +28,6 @@ Resources:
     Properties:
       Name: ContactHttpApi
       ProtocolType: HTTP
-      Tags:
-        - Key: aws-exam-resource
-          Value: true
-        - Key: project
-          Value: exam-00704
 
   # Lambdaインテグレーション
   ContactHttpApiIntegration:
@@ -43,11 +38,6 @@ Resources:
       IntegrationUri: !GetAtt ContactPostHandlerLambda.Arn
       PayloadFormatVersion: "2.0"
       TimeoutInMillis: 30000
-      Tags:
-        - Key: aws-exam-resource
-          Value: true
-        - Key: project
-          Value: exam-00704
 
   # HTTP API Route (/contact)
   ContactHttpApiRoute:
@@ -57,11 +47,6 @@ Resources:
       RouteKey: POST /contact
       AuthorizationType: NONE
       Target: !Sub integrations/${ContactHttpApiIntegration}
-      Tags:
-        - Key: aws-exam-resource
-          Value: true
-        - Key: project
-          Value: exam-00704
 
   # HTTP API Deployment
   ContactHttpApiDeployment:
