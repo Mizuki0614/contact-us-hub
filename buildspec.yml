@@ -31,3 +31,4 @@ artifacts:
   files:
     - artifacts/template.yaml
     - artifacts/s3-key.txt
+    # test
