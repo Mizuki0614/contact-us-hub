@@ -5,23 +5,27 @@ phases:
       python: 3.13
   build:
     commands:
-
-      # 1. 静的ファイルをS3にアップロード
-      - echo "Uploading static files to $STATICS_BUCKET_NAME"
-      - aws s3 cp cfn/statics/ s3://$STATICS_BUCKET_NAME/ --recursive
-
-      # 2. CloudFormationテンプレートをアーティファクト用ディレクトリにコピー
-      - echo "Copying CloudFormation templates to artifacts/templates"
+      # 1. CloudFormationテンプレートをアーティファクトディレクトリにコピー
       - mkdir -p artifacts/templates
       - cp -p cfn/template.yaml artifacts/templates/
 
-      # 3. LambdaコードをZIP化してS3にアップロード
-      - echo "Packaging Lambda code"
+      # 2. LambdaコードをZip化
       - mkdir -p artifacts/lambda
       - zip -j artifacts/lambda/contact_handler.zip cfn/lambda/src/*
-      - echo "Uploading Lambda code to $SRC_BUCKET_NAME"
-      - aws s3 cp artifacts/lambda/contact_handler.zip s3://$SRC_BUCKET_NAME/lambda/contact_handler.zip
 
+      # 3. 動的なS3キーを生成（タイムスタンプを利用）
+      - export S3_KEY=lambda/contact_handler-$(date +%s).zip
+
+      # 4. S3キーを記録して次のステージに渡す
+      - echo $S3_KEY > artifacts/s3-key.txt
+
+    finaly:
+      # 1. 静的ファイルをS3にアップロード
+      - aws s3 cp cfn/statics/ s3://$STATICS_BUCKET_NAME/ --recursive
+
+      # 2. Lambdaコード（Zip化されたファイル）をS3にアップロード
+      - aws s3 cp artifacts/lambda/contact_handler.zip s3://$SRC_BUCKET_NAME/$S3_KEY
+      
 artifacts:
   files:
-    - artifacts/templates/**
+    - artifacts/**
