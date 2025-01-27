@@ -18,6 +18,7 @@ phases:
 
       # 4. S3キーを記録して次のステージに渡す
       - echo $S3_KEY > artifacts/s3-key.txt
+      - cat artifacts/s3-key.txt
 
     finaly:
       # 1. 静的ファイルをS3にアップロード
@@ -25,7 +26,7 @@ phases:
 
       # 2. Lambdaコード（Zip化されたファイル）をS3にアップロード
       - aws s3 cp artifacts/lambda/contact_handler.zip s3://$SRC_BUCKET_NAME/$S3_KEY
-      
+
 artifacts:
   files:
     - artifacts/**

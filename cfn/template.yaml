@@ -4,6 +4,7 @@ Parameters:
   LambdaCodeS3Key:
     Type: String
     Description: S3キー（Lambdaコード）
+    
 
 Resources:
   # Lambda関数
