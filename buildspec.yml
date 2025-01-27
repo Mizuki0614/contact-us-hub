@@ -29,9 +29,5 @@ phases:
 
 artifacts:
   files:
-    - artifacts/templates/template.yaml
-  secondary-artifacts:
-    BuildArtifact:
-      files:
-        - artifacts/s3-key.txt
-      name: S3Key
+    - artifacts/template.yaml
+    - artifacts/s3-key.txt
