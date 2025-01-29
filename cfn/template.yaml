@@ -79,7 +79,20 @@ Resources:
       AccessLogSettings:
         DestinationArn: !GetAtt ContactHttpApiStageLogGroup.Arn
         Format: >-
-          {"requestId":"$context.requestId","ip":"$context.identity.sourceIp","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","routeKey":"$context.routeKey","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength","integrationStatus":"$context.integrationStatus","integrationLatency":"$context.integrationLatency","integrationServiceStatus":"$context.integrationStatus"}
+          {
+            "requestId":"$context.requestId",
+            "ip":"$context.identity.sourceIp",
+            "requestTime":"$context.requestTime",
+            "httpMethod":"$context.httpMethod",
+            "routeKey":"$context.routeKey",
+            "status":"$context.status",
+            "protocol":"$context.protocol",
+            "responseLength":"$context.responseLength",
+            "integrationStatus":"$context.integrationStatus",
+            "integrationLatency":"$context.integrationLatency",
+            "integrationServiceStatus":"$context.integrationStatus",
+            "logStreamName": "/aws/apigateway/$context.apiId/$context.requestTime"
+          }
       Tags:
         aws-exam-resource: true
         project: exam-00704
