@@ -25,7 +25,7 @@ function displayFailureMessage (text) {
 }
 
 submitEl.addEventListener('click', () => {
-  fetch('https://{API_ENDPOINT_FQDN}/contact', {
+  fetch('https://00704.engineed-exam.com/contact', {
     method: 'POST',
     mode: 'cors',
     headers: {
