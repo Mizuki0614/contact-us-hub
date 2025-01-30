@@ -36,9 +36,10 @@ submitEl.addEventListener('click', () => {
       email: emailEl.value,
       lastName: lastNameEl.value,
       firstName: firstNameEl.value,
-      inquiry_content: inquiryContentEl.value, // 問い合わせ内容を追加
+      inquiry_content: inquiryContentEl.value,
     }),
-  }).then(response => response.text())
+  })
+    .then(response => response.text())
     .then(displaySuccessMessage)
     .catch(displayFailureMessage);
 });
