@@ -65,7 +65,7 @@ Resources:
       Code:
         S3Bucket: !Sub contact-us-src-${AWS::AccountId}
         S3Key: lambda/api_header_auth.zip
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/lambda-excution-ContactPostHandler-role
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/lambda-excution-api-header-auth-role
       MemorySize: 128
       Timeout: 10
       Environment:
