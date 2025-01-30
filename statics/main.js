@@ -30,16 +30,14 @@ submitEl.addEventListener('click', () => {
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
-      'x-cloudfront-auth': 'e4c1ec56-300a-40ef-bcaa-ae55138de0b4'
     },
     body: JSON.stringify({
       email: emailEl.value,
       lastName: lastNameEl.value,
       firstName: firstNameEl.value,
-      inquiry_content: inquiryContentEl.value,
+      inquiry_content: inquiryContentEl.value, // 問い合わせ内容を追加
     }),
-  })
-    .then(response => response.text())
+  }).then(response => response.text())
     .then(displaySuccessMessage)
     .catch(displayFailureMessage);
 });
