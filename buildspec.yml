@@ -19,7 +19,6 @@ phases:
       - echo "Packaging Lambda code"
       - mkdir -p artifacts/lambda
       - zip -j artifacts/lambda/contact_handler.zip src/lambda/contact_handler.py
-      - zip -j artifacts/lambda/api_header_auth.zip src/lambda/api_header_auth.py
       - echo "Uploading Lambda code to $SRC_BUCKET_NAME"
       - aws s3 cp artifacts/lambda/ s3://$SRC_BUCKET_NAME/lambda/ --recursive
 
