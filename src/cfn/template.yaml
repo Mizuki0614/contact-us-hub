@@ -42,50 +42,6 @@ Resources:
         aws-exam-resource: true
         project: exam-00704
 
-  # Lambdaオーソライザー
-  ContactHttpApiAuthorizer:
-    Type: AWS::ApiGatewayV2::Authorizer
-    Properties:
-      ApiId: !Ref ContactHttpApi
-      Name: CloudFrontAuth
-      AuthorizerType: REQUEST
-      IdentitySource:
-        - "$request.header.X-CloudFront-Auth"
-      AuthorizerUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ContactHttpApiAuthorizerLambda.Arn}/invocations"
-      AuthorizerPayloadFormatVersion: "2.0"
-      EnableSimpleResponses: true
-      
-  # Lambda関数 (オーソライザー)
-  ContactHttpApiAuthorizerLambda:
-    Type: AWS::Lambda::Function
-    Properties:
-      FunctionName: ContactHttpApiAuthorizer
-      Handler: api_header_auth.lambda_handler
-      Runtime: python3.13
-      Code:
-        S3Bucket: !Sub contact-us-src-${AWS::AccountId}
-        S3Key: lambda/api_header_auth.zip
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/lambda-excution-api-header-auth-role
-      MemorySize: 128
-      Timeout: 10
-      Environment:
-        Variables:
-          PARAMETER_STORE_KEY: "/contact-api/expected-header-value"
-      Tags:
-        - Key: aws-exam-resource
-          Value: true
-        - Key: project
-          Value: exam-00704
-  
-  # Lambdaのリソースベースポリシー（オーソライザー）
-  ContactHttpApiAuthorizerLambdaPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !GetAtt ContactHttpApiAuthorizerLambda.Arn
-      Action: "lambda:InvokeFunction"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ContactHttpApi}/*"
-  
   # Lambdaインテグレーション
   ContactHttpApiIntegration:
     Type: AWS::ApiGatewayV2::Integration
@@ -102,8 +58,7 @@ Resources:
     Properties:
       ApiId: !Ref ContactHttpApi
       RouteKey: POST /contact
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref ContactHttpApiAuthorizer
+      AuthorizationType: NONE
       Target: !Sub integrations/${ContactHttpApiIntegration}
 
   # HTTP API Deployment
