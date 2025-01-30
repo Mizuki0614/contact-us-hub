@@ -68,6 +68,9 @@ Resources:
       Role: !Sub arn:aws:iam::${AWS::AccountId}:role/lambda-excution-ContactPostHandler-role
       MemorySize: 128
       Timeout: 10
+      Environment:
+        Variables:
+          PARAMETER_STORE_KEY: "/contact-api/expected-header-value"
       Tags:
         - Key: aws-exam-resource
           Value: true

@@ -1,8 +1,6 @@
 import json
 
 def lambda_handler(event, context):
-    # 期待するカスタムヘッダーの値
-    EXPECTED_HEADER_VALUE = "Secret12345"
 
     # ヘッダーの取得
     headers = event["headers"]
