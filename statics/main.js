@@ -30,6 +30,7 @@ submitEl.addEventListener('click', () => {
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
+      'x-cloudfront-auth': 'e4c1ec56-300a-40ef-bcaa-ae55138de0b4'
     },
     body: JSON.stringify({
       email: emailEl.value,
