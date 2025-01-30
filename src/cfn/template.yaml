@@ -1,5 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Resources:
+
   # Lambda関数
   ContactPostHandlerLambda:
     Type: AWS::Lambda::Function
@@ -21,6 +22,7 @@ Resources:
           Value: true
         - Key: project
           Value: exam-00704
+
   # Lambdaのリソースベースポリシー
   ContactPostHandlerLambdaPermission:
     Type: AWS::Lambda::Permission
@@ -28,7 +30,7 @@ Resources:
       FunctionName: !GetAtt ContactPostHandlerLambda.Arn
       Action: "lambda:InvokeFunction"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: "arn:aws:execute-api:ap-northeast-1:867344438083:zgdnjudipf/*"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ContactHttpApi}/*"
       
   # HTTP API Gateway
   ContactHttpApi:
@@ -40,6 +42,47 @@ Resources:
         aws-exam-resource: true
         project: exam-00704
 
+  # Lambdaオーソライザー
+  ContactHttpApiAuthorizer:
+    Type: AWS::ApiGatewayV2::Authorizer
+    Properties:
+      ApiId: !Ref ContactHttpApi
+      Name: CloudFrontAuth
+      AuthorizerType: REQUEST
+      IdentitySource:
+        - "$request.header.X-CloudFront-Auth"
+      AuthorizerUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ContactHttpApiAuthorizerLambda.Arn}/invocations"
+      AuthorizerPayloadFormatVersion: "2.0"
+      EnableSimpleResponses: true
+      
+  # Lambda関数 (オーソライザー)
+  ContactHttpApiAuthorizerLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: ContactHttpApiAuthorizer
+      Handler: authorizer.lambda_handler
+      Runtime: python3.13
+      Code:
+        S3Bucket: !Sub contact-us-src-${AWS::AccountId}
+        S3Key: lambda/api_header_auth.zip
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/lambda-excution-ContactPostHandler-role
+      MemorySize: 128
+      Timeout: 10
+      Tags:
+        - Key: aws-exam-resource
+          Value: true
+        - Key: project
+          Value: exam-00704
+  
+  # Lambdaのリソースベースポリシー（オーソライザー）
+  ContactHttpApiAuthorizerLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt ContactHttpApiAuthorizerLambda.Arn
+      Action: "lambda:InvokeFunction"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ContactHttpApi}/*"
+  
   # Lambdaインテグレーション
   ContactHttpApiIntegration:
     Type: AWS::ApiGatewayV2::Integration
@@ -56,7 +99,8 @@ Resources:
     Properties:
       ApiId: !Ref ContactHttpApi
       RouteKey: POST /contact
-      AuthorizationType: NONE
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref ContactHttpApiAuthorizer
       Target: !Sub integrations/${ContactHttpApiIntegration}
 
   # HTTP API Deployment
@@ -66,7 +110,7 @@ Resources:
       - ContactHttpApiRoute
       - ContactHttpApiIntegration
     Properties:
-        ApiId: !Ref ContactHttpApi
+      ApiId: !Ref ContactHttpApi
 
   # HTTP API Stage (prod)
   ContactHttpApiStage:
@@ -83,7 +127,7 @@ Resources:
       Tags:
         aws-exam-resource: true
         project: exam-00704
-
+  
   # HTTP API Stage Log Group
   ContactHttpApiStageLogGroup:
     Type: AWS::Logs::LogGroup

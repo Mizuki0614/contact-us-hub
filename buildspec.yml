@@ -8,19 +8,20 @@ phases:
 
       # 1. 静的ファイルをS3にアップロード
       - echo "Uploading static files to $STATICS_BUCKET_NAME"
-      - aws s3 cp cfn/statics/ s3://$STATICS_BUCKET_NAME/ --recursive
+      - aws s3 cp statics/ s3://$STATICS_BUCKET_NAME/ --recursive
 
       # 2. CloudFormationテンプレートをアーティファクト用ディレクトリにコピー
       - echo "Copying CloudFormation templates to artifacts/templates"
       - mkdir -p artifacts/templates
-      - cp -p cfn/template.yaml artifacts/templates/
+      - cp -p src/cfn/template.yaml artifacts/templates/
 
       # 3. LambdaコードをZIP化してS3にアップロード
       - echo "Packaging Lambda code"
       - mkdir -p artifacts/lambda
-      - zip -j artifacts/lambda/contact_handler.zip cfn/lambda/src/*
+      - zip -j artifacts/lambda/contact_handler.zip src/lambda/contact_handler.py
+      - zip -j artifacts/lambda/api_header_auth.zip src/lambda/api_header_auth.py
       - echo "Uploading Lambda code to $SRC_BUCKET_NAME"
-      - aws s3 cp artifacts/lambda/contact_handler.zip s3://$SRC_BUCKET_NAME/lambda/contact_handler.zip
+      - aws s3 cp artifacts/lambda/ s3://$SRC_BUCKET_NAME/lambda/ --recursive
 
 artifacts:
   files:
