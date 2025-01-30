@@ -33,8 +33,8 @@ submitEl.addEventListener('click', () => {
     },
     body: JSON.stringify({
       email: emailEl.value,
-      lastName: lastNameEl.value,
-      firstName: firstNameEl.value,
+      last_name: lastNameEl.value,
+      first_name: firstNameEl.value,
       inquiry_content: inquiryContentEl.value, // 問い合わせ内容を追加
     }),
   }).then(response => response.text())
