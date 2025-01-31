@@ -1,0 +1,27 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.13
+  build:
+    commands:
+
+      # 1. 静的ファイルをS3にアップロード
+      - echo "Uploading static files to $STATICS_BUCKET_NAME"
+      - aws s3 cp statics/ s3://$STATICS_BUCKET_NAME/ --recursive
+
+      # 2. CloudFormationテンプレートをアーティファクト用ディレクトリにコピー
+      - echo "Copying CloudFormation templates to artifacts/templates"
+      - mkdir -p artifacts/templates
+      - cp -p src/cfn/template.yaml artifacts/templates/
+
+      # 3. LambdaコードをZIP化してS3にアップロード
+      - echo "Packaging Lambda code"
+      - mkdir -p artifacts/lambda
+      - zip -j artifacts/lambda/contact_handler.zip src/lambda/contact_handler.py
+      - echo "Uploading Lambda code to $SRC_BUCKET_NAME"
+      - aws s3 cp artifacts/lambda/ s3://$SRC_BUCKET_NAME/lambda/ --recursive
+
+artifacts:
+  files:
+    - artifacts/templates/**

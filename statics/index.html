@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title>Serverless exam</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="./main.css" as="style" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Serverless exam</h1>
+      <h2>Contact form</h2>
+      <div>
+        <form id="contact">
+          <div class="input">
+            <label for="email">
+              <span>email</span>
+              <input type="email" id="email" placeholder="test@test.com" />
+            </label>
+          </div>
+          <div class="input">
+            <label for="lastName">
+              <span>last name</span>
+              <input type="text" id="lastName" placeholder="姓" />
+            </label>
+          </div>
+          <div class="input">
+            <label for="firstName">
+              <span>first name</span>
+              <input type="text" id="firstName" placeholder="名" />
+            </label>
+          </div>
+          <div class="input">
+            <label for="inquiryContent">
+              <span>inquiry</span>
+              <textarea id="inquiryContent" placeholder="お問い合わせ内容を入力してください" rows="5"></textarea>
+            </label>
+          </div>
+          <div class="input">
+            <button id="submit" type="button">Submit</button>
+          </div>
+        </form>
+        <div id="result" class="result success hidden">
+          result
+          <pre><code id="response"></code></pre>
+        </div>
+      </div>
+    </div>
+    <script src="./main.js"></script>
+  </body>
+</html>
